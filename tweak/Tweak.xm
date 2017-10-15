@@ -203,6 +203,26 @@ static void showTestNotificationCenterNotification() {
 
 %end
 
+@interface SBSearchEtceteraLayoutContentView : UIView
+@end
+
+@interface SBSearchEtceteraNotificationsLayoutContentView : SBSearchEtceteraLayoutContentView
+@end
+
+%hook SBSearchEtceteraNotificationsLayoutContentView
+- (void)setFrame:(CGRect)frame {
+    if (frame.origin.x != appViewSize(IN_LS).height) {
+        frame = CGRectMake(frame.origin.x, appViewSize(IN_LS).height, frame.size.width, frame.size.height - appViewSize(IN_LS).height);
+    }
+    %orig(frame);
+}
+
+- (void)layoutSubviews {
+    %orig;
+    [self setFrame:self.frame];
+}
+%end
+
 %hook NCNotificationListViewController
 
 %new
@@ -217,7 +237,6 @@ static void showTestNotificationCenterNotification() {
 		else
 			return showAllWhenNotSelected;
 	}
-
 	return [(*phContainerView).selectedAppID isEqualToString:identifier];
 }
 
@@ -342,9 +361,10 @@ static void showTestNotificationCenterNotification() {
 	CGRectEdge edge = ((IN_LS && [prefs integerForKey:@"iconLocation"] == 0) || (!IN_LS && [prefs integerForKey:@"ncIconLocation"] == 0)) ? CGRectMinYEdge : CGRectMaxYEdge;
 	CGRectDivide(self.view.bounds, &phContainerViewFrame, &collectionViewFrame, appViewSize(IN_LS).height, edge);
 
-	(*phContainerView).frame = phContainerViewFrame;
-	self.collectionView.frame = collectionViewFrame;
-
+	(*phContainerView).frame = CGRectMake(phContainerViewFrame.origin.x, phContainerViewFrame.origin.y - phContainerViewFrame.size.height, phContainerViewFrame.size.width, phContainerViewFrame.size.height);
+	
+	//self.collectionView.frame = CGRectMake(collectionViewFrame.origin.x, collectionViewFrame.origin.y, collectionViewFrame.size.width, collectionViewFrame.size.height + 100);
+	
 	// Layout pull to clear view
 	// UIView **pullToClearView = (IN_LS) ? &lsPullToClearView : &ncPullToClearView;
 	// BOOL pullToClearEnabled = (IN_LS) ? [prefs boolForKey:@"enablePullToClear"] : [prefs boolForKey:@"ncEnablePullToClear"];
@@ -353,7 +373,9 @@ static void showTestNotificationCenterNotification() {
 
 	// // Doesn't make any difference
 	// self.collectionView.contentSize = self.collectionView.bounds.size;
-	// self.collectionView.alwaysBounceVertical = YES;
+	//self.collectionView.alwaysBounceVertical = YES;
+	//self.collectionView.bounces = YES;
+	//self.collectionView.scrollEnabled = YES;
 }
 
 %new
@@ -447,8 +469,13 @@ static void showTestNotificationCenterNotification() {
 			continue;
 
 		if ([controller shouldShowNotificationAtIndexPath:[[attributes objectAtIndex:i] indexPath]]) {
-			curAttributes.frame = CGRectMake(curAttributes.frame.origin.x, curVerticalOffset + PADDING, curAttributes.frame.size.width, curAttributes.frame.size.height);
-			curVerticalOffset += curAttributes.frame.size.height + PADDING;
+		    //if (first) {
+		    //    curAttributes.frame = CGRectMake(curAttributes.frame.origin.x, curVerticalOffset + 80 + PADDING, curAttributes.frame.size.width, curAttributes.frame.size.height);
+    		//	curVerticalOffset += curAttributes.frame.size.height + PADDING + 80;
+		    //} else {
+    			curAttributes.frame = CGRectMake(curAttributes.frame.origin.x, curVerticalOffset + PADDING, curAttributes.frame.size.width, curAttributes.frame.size.height);
+    			curVerticalOffset += curAttributes.frame.size.height + PADDING;
+    		//}
 		}
 		else {
 			curAttributes.hidden = YES;

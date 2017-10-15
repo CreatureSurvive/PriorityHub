@@ -6,7 +6,7 @@ include $(THEOS)/makefiles/common.mk
 BUNDLE_NAME = PriorityHub
 PriorityHub_FILES = PHRoot.mm PHLockScreenPrefs.mm PHNCPrefs.mm PHVerticalAdjustmentTableCell.m PHSubtitleSwitchTableCell.m PHPrefsHeaderCell.m
 PriorityHub_INSTALL_PATH = /Library/PreferenceBundles
-PriorityHub_FRAMEWORKS = UIKit
+PriorityHub_FRAMEWORKS = UIKit CoreGraphics
 PriorityHub_PRIVATE_FRAMEWORKS = Preferences
 
 include $(THEOS_MAKE_PATH)/bundle.mk
