@@ -2,7 +2,7 @@
 #import <Preferences/PSControlTableCell.h>
 
 @interface PHVerticalAdjustmentTableCell : PSControlTableCell {
-	NSString *title;
+    NSString *title;
 }
 @property (nonatomic, retain) UIStepper *control;
 @end
@@ -12,53 +12,54 @@
 @dynamic control;
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier specifier:(PSSpecifier *)specifier {
-	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier specifier:specifier]) {
-		self.accessoryView = self.control;
-	}
-	return self;
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier specifier:specifier]) {
+        self.accessoryView = self.control;
+        self.detailTextLabel.hidden = YES;
+    }
+    return self;
 }
 
 - (void)refreshCellContentsWithSpecifier:(PSSpecifier *)specifier {
-	[super refreshCellContentsWithSpecifier:specifier];
-	title = [specifier propertyForKey:@"label"];
-	[self _updateLabel];
+    [super refreshCellContentsWithSpecifier:specifier];
+    title = [specifier propertyForKey:@"label"];
+    [self _updateLabel];
 }
 
 - (UIStepper *)newControl {
-	UIStepper *stepper = [[UIStepper alloc] initWithFrame:CGRectZero];
-	stepper.continuous = NO;
-	stepper.value = 0;
-	stepper.minimumValue = 0;
-	stepper.maximumValue = 10000;
-	return stepper;
+    UIStepper *stepper = [[UIStepper alloc] initWithFrame:CGRectZero];
+    stepper.continuous = NO;
+    stepper.value = 0;
+    stepper.minimumValue = 0;
+    stepper.maximumValue = 10000;
+    return stepper;
 }
 
 - (NSNumber *)controlValue {
-	return @(self.control.value);
+    return @(self.control.value);
 }
 
 - (void)setValue:(NSNumber *)value {
-	[super setValue:value];
-	self.control.value = value.doubleValue;
+    [super setValue:value];
+    self.control.value = value.doubleValue;
 }
 
 - (void)controlChanged:(UIStepper *)stepper {
-	[super controlChanged:stepper];
-	[self _updateLabel];
+    [super controlChanged:stepper];
+    [self _updateLabel];
 }
 
 - (void)_updateLabel {
-	if (!self.control) {
-		return;
-	}
+    if (!self.control) {
+        return;
+    }
 
-	int value = (int)self.control.value;
-	NSString *pointStr = (value == 1) ? @"point" : @"points";
-	// NSString *direction = @"";
+    int value = (int)self.control.value;
+    NSString *pointStr = (value == 1) ? @"point" : @"points";
+    // NSString *direction = @"";
 
-	self.textLabel.text = [NSString stringWithFormat:@"%@: %d %@", title, value, pointStr];
+    self.textLabel.text = [NSString stringWithFormat:@"%@: %d %@", title, value, pointStr];
 
-	[self setNeedsLayout];
+    [self setNeedsLayout];
 }
 
 @end

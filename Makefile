@@ -8,7 +8,7 @@ SOURCE_FILES=$(wildcard tweak/*.m tweak/*.mm tweak/*.x tweak/*.xm)
 
 TWEAK_NAME = PriorityHub
 PriorityHub_FILES = $(SOURCE_FILES)
-PriorityHub_FRAMEWORKS = UIKit CoreGraphics CoreTelephony QuartzCore
+PriorityHub_FRAMEWORKS = UIKit CoreGraphics CoreTelephony QuartzCore AudioToolbox
 PriorityHub_LIBRARIES = applist
 
 include $(THEOS_MAKE_PATH)/tweak.mk
