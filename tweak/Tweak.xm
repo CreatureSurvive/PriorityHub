@@ -449,6 +449,9 @@ UIImage *iconForIdentifier(NSString *identifier) {
 //
 
 // Hide section headers in notification center
+// Posible solution to weird spacing. edit the section list when its set and place all notifications in one section
+// this shoud force all notifications into one section causing there to only be one header added to the list
+// then i can adjust the spcing for the first cell only
 %hook NCNotificationSectionListViewController
 
 -(CGSize)collectionView: (id)arg1 layout: (id)arg2 referenceSizeForHeaderInSection: (long long)arg3 {
